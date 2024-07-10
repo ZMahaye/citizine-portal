@@ -1,0 +1,35 @@
+/* styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+}
+
+h2 {
+    color: #003399; /* KZN DOT Blue */
+}
+
+.navbar {
+    background-color: #003399; /* KZN DOT Blue */
+}
+
+.navbar-brand, .nav-link {
+    color: #FFCC00 !important; /* KZN DOT Yellow */
+}
+
+.navbar-brand:hover, .nav-link:hover {
+    color: #339933 !important; /* KZN DOT Green */
+}
+
+.container h4 {
+    color: #003399; /* KZN DOT Blue */
+}
+
+footer {
+    background-color: #003399; /* KZN DOT Blue */
+    color: #FFCC00; /* KZN DOT Yellow */
+}
+
+.footer img {
+    margin-right: 10px;
+}

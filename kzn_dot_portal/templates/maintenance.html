@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Road Maintenance Reporting - KZN Department of Transport{% endblock %}
+{% block content %}
+<h2 class="mt-4">Road Maintenance Reporting</h2>
+<p>Citizens can report road issues such as potholes and faulty traffic lights.</p>
+<form>
+    <div class="form-group">
+        <label for="issue">Type of Issue</label>
+        <select class="form-control" id="issue">
+            <option>Pothole</option>
+            <option>Faulty Traffic Light</option>
+            <option>Road Blockage</option>
+            <option>Other</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="location">Location</label>
+        <input type="text" class="form-control" id="location" placeholder="Enter the location">
+        <button type="button" class="btn btn-secondary mt-2" onclick="getLocation()"><i class="fas fa-map-marker-alt"></i> Use My Current Location</button>
+    </div>
+    <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" rows="3" placeholder="Provide a detailed description of the issue"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Report</button>
+</form>
+
+<script>
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(showPosition, showError);
+        } else {
+            alert("Geolocation is not supported by this browser.");
+        }
+    }
+    
+    function showPosition(position) {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        document.getElementById('location').value = `Latitude: ${lat}, Longitude: ${lon}`;
+    }
+    
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                alert("User denied the request for Geolocation.");
+                break;
+            case error.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+            case error.TIMEOUT:
+                alert("The request to get user location timed out.");
+                break;
+            case error.UNKNOWN_ERROR:
+                alert("An unknown error occurred.");
+                break;
+        }
+    }
+    </script>
+{% endblock %}

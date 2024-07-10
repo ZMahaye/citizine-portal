@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Booking - KZN Department of Transport{% endblock %}
+{% block content %}
+<h2 class="mt-4">Book an Appointment</h2>
+<form>
+    <div class="form-group">
+        <label for="service">Select Service</label>
+        <select class="form-control" id="service">
+            <option>Learner's Booking</option>
+            <option>Driver's License Booking</option>
+            <option>Vehicle License Renewal</option>
+            <option>Road Maintenance Reporting</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="date">Select Date</label>
+        <input type="date" class="form-control" id="date">
+    </div>
+    <div class="form-group">
+        <label for="time">Select Time</label>
+        <input type="time" class="form-control" id="time">
+    </div>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-calendar-check"></i> Book Now</button>
+</form>
+{% endblock %}
