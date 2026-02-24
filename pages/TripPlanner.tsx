@@ -23,11 +23,17 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ t, highContrast }) => {
     }
   };
 
+  const filteredRoutes = MOCK_TRIP_ROUTES.filter(route => {
+    if (mode === 'all') return true;
+    return route.mode.toLowerCase() === mode.toLowerCase();
+  });
+
   const modes = [
     { id: 'all', label: tp.all, icon: 'fa-location-dot' },
     { id: 'bus', label: 'Bus', icon: 'fa-bus' },
     { id: 'taxi', label: 'Taxi', icon: 'fa-taxi' },
     { id: 'rail', label: 'Rail', icon: 'fa-train' },
+    { id: 'flight', label: 'Flight', icon: 'fa-plane' },
   ];
 
   const getModeIcon = (mode: string) => {
@@ -36,6 +42,7 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ t, highContrast }) => {
       case 'taxi': return 'fa-taxi';
       case 'rail': return 'fa-train';
       case 'walk': return 'fa-person-walking';
+      case 'flight': return 'fa-plane';
       default: return 'fa-route';
     }
   };
@@ -46,7 +53,18 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ t, highContrast }) => {
       case 'taxi': return highContrast ? 'text-yellow-400' : 'text-green-600';
       case 'rail': return highContrast ? 'text-yellow-400' : 'text-purple-600';
       case 'walk': return 'text-slate-400';
+      case 'flight': return highContrast ? 'text-yellow-400' : 'text-sky-600';
       default: return highContrast ? 'text-yellow-400' : 'text-green-600';
+    }
+  };
+
+  const getModeBadgeColor = (mode: string) => {
+    switch (mode) {
+      case 'Bus': return 'bg-blue-100 text-blue-700';
+      case 'Taxi': return 'bg-green-100 text-green-700';
+      case 'Rail': return 'bg-purple-100 text-purple-700';
+      case 'Flight': return 'bg-sky-100 text-sky-700';
+      default: return 'bg-slate-100 text-slate-700';
     }
   };
 
@@ -161,7 +179,13 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ t, highContrast }) => {
             {tp.results}
           </h2>
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {MOCK_TRIP_ROUTES.map((route) => (
+            {filteredRoutes.length === 0 && (
+              <div className="col-span-3 text-center py-12 text-slate-400">
+                <i className="fa-solid fa-route text-3xl mb-3 block"></i>
+                <p className="font-medium">No routes found for the selected mode.</p>
+              </div>
+            )}
+            {filteredRoutes.map((route) => (
               <div
                 key={route.id}
                 className={`p-6 rounded-3xl border cursor-pointer transition-all ${
@@ -173,15 +197,7 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ t, highContrast }) => {
               >
                 {/* Route Header */}
                 <div className="flex items-center justify-between mb-4">
-                  <div className={`px-3 py-1 rounded-full text-xs font-bold ${
-                    route.mode === 'Bus' 
-                      ? 'bg-blue-100 text-blue-700' 
-                      : route.mode === 'Taxi' 
-                        ? 'bg-green-100 text-green-700' 
-                        : route.mode === 'Rail'
-                          ? 'bg-purple-100 text-purple-700'
-                          : 'bg-slate-100 text-slate-700'
-                  }`}>
+                  <div className={`px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 ${getModeBadgeColor(route.mode)}`}>
                     <i className={`fa-solid ${getModeIcon(route.mode)} mr-1`}></i>
                     {route.mode}
                   </div>
@@ -330,6 +346,9 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ t, highContrast }) => {
                 <option>Durban Station</option>
                 <option>Bridge City Mall</option>
                 <option>Gateway Mall</option>
+                <option>King Shaka International Airport</option>
+                <option>O.R. Tambo International Airport</option>
+                <option>Cape Town International Airport</option>
               </select>
             </div>
 
@@ -346,6 +365,9 @@ const TripPlanner: React.FC<TripPlannerProps> = ({ t, highContrast }) => {
                 <option>Warwick Avenue</option>
                 <option>Durban Station</option>
                 <option>Bridge City Mall</option>
+                <option>King Shaka International Airport</option>
+                <option>O.R. Tambo International Airport</option>
+                <option>Cape Town International Airport</option>
               </select>
             </div>
 

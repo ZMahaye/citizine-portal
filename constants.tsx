@@ -29,6 +29,10 @@ export const TRANSPORT_HUBS: TransportHub[] = [
   { id: 'h3', name: 'Pine Street Bus Terminus', type: 'Bus', location: 'Pine St, Durban', services: ['Durban Transport', 'People Mover'] },
   { id: 'h4', name: 'Bridge City Mall', type: 'Taxi', location: 'KwaMashu', services: ['Local Taxis', 'GO!Durban Interface'] },
   { id: 'h5', name: 'Pietermaritzburg Station', type: 'Rail', location: 'PMB Central', services: ['Metrorail'] },
+  { id: 'h6', name: 'King Shaka International Airport', type: 'Flight', location: 'La Mercy, Durban', services: ['Domestic Flights', 'International Flights', 'Airport Shuttle'] },
+  { id: 'h7', name: 'Virginia Airport', type: 'Flight', location: 'Durban North', services: ['Charter Flights', 'Flight Training', 'General Aviation'] },
+  { id: 'h8', name: 'Pietermaritzburg Airport', type: 'Flight', location: 'Oribi, PMB', services: ['Regional Flights', 'Charter Services'] },
+  { id: 'h9', name: 'Richards Bay Airport', type: 'Flight', location: 'Richards Bay', services: ['Domestic Connections', 'Charter Services'] },
 ];
 
 // --- New Initiative Mock Data ---
@@ -77,6 +81,24 @@ export const MOCK_TRIP_ROUTES: TripRoute[] = [
       { type: 'rail', description: 'Metrorail to KwaMashu', duration: '22 min' },
       { type: 'taxi', description: 'Taxi to Gateway Mall', duration: '20 min' },
       { type: 'walk', description: 'Walk to entrance', duration: '5 min' },
+    ]
+  },
+  {
+    id: 'tr4', origin: 'Durban', destination: 'Johannesburg (O.R. Tambo)', duration: '1h 05min', distance: '570 km', fare: 1200,
+    mode: 'Flight', departureTime: '09:30', arrivalTime: '10:35',
+    steps: [
+      { type: 'taxi', description: 'Taxi to King Shaka International', duration: '30 min' },
+      { type: 'flight', description: 'FlySafair FA112 · Durban → Johannesburg', duration: '1h 05min' },
+      { type: 'walk', description: 'Collect luggage and exit O.R. Tambo', duration: '20 min' },
+    ]
+  },
+  {
+    id: 'tr5', origin: 'Durban', destination: 'Cape Town (CPT)', duration: '2h 05min', distance: '1660 km', fare: 1850,
+    mode: 'Flight', departureTime: '11:00', arrivalTime: '13:05',
+    steps: [
+      { type: 'bus', description: 'Airport shuttle to King Shaka International', duration: '35 min' },
+      { type: 'flight', description: 'Airlink 4Z205 · Durban → Cape Town', duration: '2h 05min' },
+      { type: 'walk', description: 'Collect luggage and exit Cape Town International', duration: '25 min' },
     ]
   },
 ];

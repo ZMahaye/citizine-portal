@@ -8,6 +8,8 @@ interface HeaderProps {
   currentPage: string;
   t: any;
   highContrast: boolean;
+  currentUser?: { name: string; email: string; role: string } | null;
+  onLogout?: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
@@ -17,9 +19,12 @@ const Header: React.FC<HeaderProps> = ({
   currentPage,
   t,
   highContrast,
+  currentUser,
+  onLogout,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
 
   const navItems = [
     { label: t.nav.home, id: "home" },
@@ -185,6 +190,73 @@ const Header: React.FC<HeaderProps> = ({
               <option value={Language.ZULU}>isiZulu</option>
             </select>
 
+            {/* Auth Controls */}
+            {currentUser ? (
+              <div className="relative hidden xl:block">
+                <button
+                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-sm font-semibold transition ${
+                    highContrast
+                      ? 'bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700'
+                      : 'bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  <div className="w-7 h-7 rounded-full bg-green-700 text-white flex items-center justify-center text-xs font-black">
+                    {currentUser.name.charAt(0)}
+                  </div>
+                  <span className="max-w-[100px] truncate">{currentUser.name.split(' ')[0]}</span>
+                  <i className={`fa-solid fa-chevron-down text-[10px] transition-transform ${showUserMenu ? 'rotate-180' : ''}`}></i>
+                </button>
+                {showUserMenu && (
+                  <div
+                    className={`absolute right-0 top-full mt-2 w-56 rounded-2xl border shadow-xl py-2 z-50 ${
+                      highContrast ? 'bg-zinc-900 border-zinc-700' : 'bg-white border-slate-100'
+                    }`}
+                  >
+                    <div className={`px-4 py-3 border-b ${highContrast ? 'border-zinc-800' : 'border-slate-100'}`}>
+                      <p className={`text-sm font-bold ${highContrast ? 'text-white' : 'text-slate-800'}`}>{currentUser.name}</p>
+                      <p className="text-xs text-slate-500 truncate">{currentUser.email}</p>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-green-600 mt-0.5 block">{currentUser.role}</span>
+                    </div>
+                    <button
+                      onClick={() => { onNavigate('dashboard'); setShowUserMenu(false); }}
+                      className={`w-full text-left px-4 py-3 text-sm font-medium ${highContrast ? 'text-white hover:bg-zinc-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                    >
+                      <i className="fa-solid fa-gauge mr-2 text-slate-400"></i>
+                      My Dashboard
+                    </button>
+                    <button
+                      onClick={() => { onNavigate('ol_application'); setShowUserMenu(false); }}
+                      className={`w-full text-left px-4 py-3 text-sm font-medium ${highContrast ? 'text-white hover:bg-zinc-800' : 'text-slate-700 hover:bg-slate-50'}`}
+                    >
+                      <i className="fa-solid fa-file-certificate mr-2 text-slate-400"></i>
+                      Operating License
+                    </button>
+                    <div className={`border-t my-1 ${highContrast ? 'border-zinc-800' : 'border-slate-100'}`}></div>
+                    <button
+                      onClick={() => { onLogout && onLogout(); setShowUserMenu(false); }}
+                      className="w-full text-left px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50"
+                    >
+                      <i className="fa-solid fa-arrow-right-from-bracket mr-2"></i>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <button
+                onClick={() => onNavigate('login')}
+                className={`hidden xl:flex items-center gap-2 px-4 py-2 rounded-xl font-bold text-sm transition ${
+                  highContrast
+                    ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                    : 'bg-green-700 text-white hover:bg-green-800'
+                }`}
+              >
+                <i className="fa-solid fa-arrow-right-to-bracket"></i>
+                Sign In
+              </button>
+            )}
+
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="xl:hidden p-2 rounded-lg"
@@ -238,6 +310,32 @@ const Header: React.FC<HeaderProps> = ({
                   </button>
                 )
               )}
+              <div className={`px-4 pt-2 border-t ${highContrast ? 'border-zinc-800' : 'border-slate-100'}`}>
+                {currentUser ? (
+                  <div className="space-y-1">
+                    <div className={`px-2 py-2 text-sm ${highContrast ? 'text-zinc-300' : 'text-slate-600'}`}>
+                      Signed in as <span className="font-bold">{currentUser.name}</span>
+                    </div>
+                    <button
+                      onClick={() => { onLogout && onLogout(); setIsOpen(false); }}
+                      className="w-full text-left px-2 py-3 text-sm font-semibold text-red-600"
+                    >
+                      <i className="fa-solid fa-arrow-right-from-bracket mr-2"></i>
+                      Sign Out
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => { onNavigate('login'); setIsOpen(false); }}
+                    className={`w-full py-3 rounded-xl font-bold text-sm text-center mt-1 ${
+                      highContrast ? 'bg-yellow-400 text-black' : 'bg-green-700 text-white'
+                    }`}
+                  >
+                    <i className="fa-solid fa-arrow-right-to-bracket mr-2"></i>
+                    Sign In
+                  </button>
+                )}
+              </div>
             </nav>
           </div>
         )}
