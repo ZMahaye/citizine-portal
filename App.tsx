@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Header from './components/Header';
 import Chatbot from './components/Chatbot';
 import LandingPage from './pages/LandingPage';
+import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import ServiceCatalogue from './pages/ServiceCatalogue';
 import TrafficMap from './pages/TrafficMap';
@@ -29,6 +30,7 @@ const App: React.FC = () => {
   const [highContrast, setHighContrast] = useState(false);
   const [fontSize, setFontSize] = useState<'normal' | 'large' | 'xl'>('normal');
   const [dyslexicFont, setDyslexicFont] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ name: string; email: string; role: string } | null>(null);
 
   const t = translations[lang === Language.ZULU ? 'zu' : 'en'];
 
@@ -47,8 +49,23 @@ const App: React.FC = () => {
     ${dyslexicFont ? 'font-dyslexic' : 'font-sans'}
   `;
 
+  const handleLogin = (user: { name: string; email: string; role: string }) => {
+    setCurrentUser(user);
+    setCurrentPage('home');
+  };
+
+  const handleLogout = () => {
+    setCurrentUser(null);
+    setCurrentPage('home');
+  };
+
   const renderPage = () => {
     const props = { lang, t, highContrast };
+
+    if (currentPage === 'login') {
+      return <LoginPage onLogin={handleLogin} onNavigate={setCurrentPage} highContrast={highContrast} t={t} />;
+    }
+
     switch (currentPage) {
       case 'home': return <LandingPage onNavigate={setCurrentPage} {...props} />;
       case 'dashboard': return <Dashboard {...props} />;
@@ -87,6 +104,8 @@ const App: React.FC = () => {
         currentPage={currentPage}
         t={t}
         highContrast={highContrast}
+        currentUser={currentUser}
+        onLogout={handleLogout}
       />
       
       <main id="main-content" className="flex-grow focus:outline-none" tabIndex={-1}>

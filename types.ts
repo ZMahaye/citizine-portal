@@ -47,6 +47,8 @@ export interface TransportHub {
   type: 'Bus' | 'Taxi' | 'Rail' | 'Flight';
   location: string;
   services: string[];
+  terminal?: string;
+  iata?: string;
 }
 
 // --- Pillar Initiative Types ---
@@ -75,14 +77,14 @@ export interface TripRoute {
   duration: string;
   distance: string;
   fare: number;
-  mode: 'Bus' | 'Taxi' | 'Rail' | 'Mixed';
+  mode: 'Bus' | 'Taxi' | 'Rail' | 'Mixed' | 'Flight';
   steps: TripStep[];
   departureTime: string;
   arrivalTime: string;
 }
 
 export interface TripStep {
-  type: 'walk' | 'bus' | 'taxi' | 'rail';
+  type: 'walk' | 'bus' | 'taxi' | 'rail' | 'flight';
   description: string;
   duration: string;
 }
