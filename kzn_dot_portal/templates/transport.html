@@ -1,25 +1,802 @@
 {% extends "base.html" %}
 {% block title %}Transport Management - KZN Department of Transport{% endblock %}
 {% block content %}
+
 <h2 class="mt-4">Public Transport System Management</h2>
-<div class="row">
-    <div class="col-md-6">
-        <h4><i class="fas fa-bus"></i> Real-time Tracking</h4>
-        <p>Monitor the real-time location of public transport vehicles, including buses and taxis.</p>
+<p class="text-muted mb-4">KwaZulu-Natal integrated transport services — road, rail and air.</p>
+
+<!-- ============================================================
+     TAB NAVIGATION
+     ============================================================ -->
+<ul class="nav nav-tabs mb-4" id="transportTabs" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="overview-tab" data-toggle="tab" href="#overview" role="tab">
+            <i class="fas fa-th-large"></i> Overview
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="hub-tab" data-toggle="tab" href="#hub" role="tab">
+            <i class="fas fa-map-marked-alt"></i> Transport Hub Locator
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="journey-tab" data-toggle="tab" href="#journey" role="tab">
+            <i class="fas fa-route"></i> Plan Your Journey
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="license-tab" data-toggle="tab" href="#license" role="tab">
+            <i class="fas fa-id-card"></i> Operating Licenses
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content" id="transportTabsContent">
+
+    <!-- ============================================================
+         TAB 1 – OVERVIEW
+         ============================================================ -->
+    <div class="tab-pane fade show active" id="overview" role="tabpanel">
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <i class="fas fa-bus fa-2x mb-2" style="color:#003399;"></i>
+                        <h6 class="font-weight-bold">Bus Services</h6>
+                        <p class="text-muted small mb-0">BRT, municipal &amp; intercity buses across KZN.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <i class="fas fa-taxi fa-2x mb-2" style="color:#003399;"></i>
+                        <h6 class="font-weight-bold">Minibus Taxis</h6>
+                        <p class="text-muted small mb-0">Registered taxi associations &amp; route permits.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <i class="fas fa-train fa-2x mb-2" style="color:#003399;"></i>
+                        <h6 class="font-weight-bold">Rail Services</h6>
+                        <p class="text-muted small mb-0">Metrorail commuter rail for the Greater Durban area.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card text-center h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <i class="fas fa-plane fa-2x mb-2" style="color:#003399;"></i>
+                        <h6 class="font-weight-bold">Air Transport</h6>
+                        <p class="text-muted small mb-0">King Shaka, Virginia &amp; Richards Bay airports.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col-md-6">
+                <h4><i class="fas fa-satellite-dish"></i> Real-time Tracking</h4>
+                <p>Monitor the real-time location of public transport vehicles, including buses, taxis and trains.</p>
+            </div>
+            <div class="col-md-6">
+                <h4><i class="fas fa-calendar-alt"></i> Routes and Schedules</h4>
+                <p>View detailed information about transport routes, schedules, and fare information across all modes.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <h4><i class="fas fa-map-signs"></i> Route Optimization</h4>
+                <p>Optimize routes based on real-time traffic information to ensure timely arrivals.</p>
+            </div>
+            <div class="col-md-6">
+                <h4><i class="fas fa-info-circle"></i> Service Information</h4>
+                <p>Get updates on any changes or disruptions to public transport services.</p>
+            </div>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h4><i class="fas fa-route"></i> Routes and Schedules</h4>
-        <p>View detailed information about transport routes, schedules, and fare information.</p>
+
+    <!-- ============================================================
+         TAB 2 – TRANSPORT HUB LOCATOR
+         ============================================================ -->
+    <div class="tab-pane fade" id="hub" role="tabpanel">
+        <h4 class="mb-1"><i class="fas fa-map-marked-alt" style="color:#003399;"></i> Transport Hub Locator</h4>
+        <p class="text-muted mb-3">Find the nearest transport hub by selecting a mode and district below.</p>
+
+        <!-- Filter controls -->
+        <div class="form-row align-items-end mb-4">
+            <div class="col-md-4 mb-2">
+                <label for="hubMode"><strong>Transport Mode</strong></label>
+                <select class="form-control" id="hubMode" onchange="filterHubs()">
+                    <option value="all">All Modes</option>
+                    <option value="bus">Bus</option>
+                    <option value="taxi">Minibus Taxi</option>
+                    <option value="rail">Rail</option>
+                    <option value="flight">Flight / Air</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-2">
+                <label for="hubDistrict"><strong>District / City</strong></label>
+                <select class="form-control" id="hubDistrict" onchange="filterHubs()">
+                    <option value="all">All Districts</option>
+                    <option value="durban">eThekwini (Durban)</option>
+                    <option value="pmb">uMgungundlovu (PMB)</option>
+                    <option value="richardsbay">King Cetshwayo (Richards Bay)</option>
+                    <option value="ladysmith">uThukela (Ladysmith)</option>
+                    <option value="newcastle">Amajuba (Newcastle)</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-2">
+                <button class="btn btn-secondary w-100" type="button" onclick="useMyLocation()">
+                    <i class="fas fa-map-marker-alt"></i> Use My Location
+                </button>
+            </div>
+        </div>
+
+        <!-- Map placeholder -->
+        <div class="mb-4 rounded border text-center d-flex align-items-center justify-content-center"
+             style="height:220px; background:#e8edf8;">
+            <div>
+                <i class="fas fa-map fa-3x mb-2" style="color:#003399; opacity:0.4;"></i>
+                <p class="text-muted mb-0">Interactive map loads here (Google Maps / Leaflet integration)</p>
+            </div>
+        </div>
+
+        <!-- Hub cards -->
+        <div class="row" id="hubCards">
+
+            <!-- Bus hubs -->
+            <div class="col-md-6 mb-3 hub-card" data-mode="bus" data-district="durban">
+                <div class="card shadow-sm border-left-primary h-100" style="border-left: 4px solid #003399;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-bus" style="color:#003399;"></i> Durban CBD Bus Terminal</h6>
+                            <span class="badge badge-primary">Bus</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> Pine St &amp; Commercial Rd, Durban CBD</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> Operates: 04:30 – 22:00 daily</p>
+                        <p class="text-muted small mb-0"><i class="fas fa-phone"></i> +27 31 309 4444</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3 hub-card" data-mode="bus" data-district="pmb">
+                <div class="card shadow-sm h-100" style="border-left: 4px solid #003399;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-bus" style="color:#003399;"></i> PMB Bus Station</h6>
+                            <span class="badge badge-primary">Bus</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> Church St, Pietermaritzburg</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> Operates: 05:00 – 21:00 daily</p>
+                        <p class="text-muted small mb-0"><i class="fas fa-phone"></i> +27 33 342 5111</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Taxi hubs -->
+            <div class="col-md-6 mb-3 hub-card" data-mode="taxi" data-district="durban">
+                <div class="card shadow-sm h-100" style="border-left: 4px solid #FFCC00;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-taxi" style="color:#FFCC00;"></i> Warwick Taxi Rank</h6>
+                            <span class="badge badge-warning text-dark">Taxi</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> Warwick Junction, Durban</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> Operates: 04:00 – 23:00 daily</p>
+                        <p class="text-muted small mb-0"><i class="fas fa-info-circle"></i> Major intercity &amp; local routes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3 hub-card" data-mode="taxi" data-district="newcastle">
+                <div class="card shadow-sm h-100" style="border-left: 4px solid #FFCC00;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-taxi" style="color:#FFCC00;"></i> Newcastle Taxi Rank</h6>
+                            <span class="badge badge-warning text-dark">Taxi</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> Scott St, Newcastle</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> Operates: 05:00 – 20:00 daily</p>
+                        <p class="text-muted small mb-0"><i class="fas fa-info-circle"></i> Regional taxi association hub</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rail hubs -->
+            <div class="col-md-6 mb-3 hub-card" data-mode="rail" data-district="durban">
+                <div class="card shadow-sm h-100" style="border-left: 4px solid #339933;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-train" style="color:#339933;"></i> Durban Railway Station (Metrorail)</h6>
+                            <span class="badge badge-success">Rail</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> NMR Ave, Durban CBD</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> First train: 05:10 | Last: 20:30</p>
+                        <p class="text-muted small mb-0"><i class="fas fa-info-circle"></i> Serves Kwa-Mashu, Umlazi, Pinetown lines</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flight / Air hubs -->
+            <div class="col-md-6 mb-3 hub-card" data-mode="flight" data-district="durban">
+                <div class="card shadow-sm h-100" style="border-left: 4px solid #cc0000;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-plane-departure" style="color:#cc0000;"></i> King Shaka International Airport</h6>
+                            <span class="badge badge-danger">Flight</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> La Mercy, 35 km N of Durban CBD</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> Open 24 hours | IATA: <strong>DUR</strong></p>
+                        <p class="text-muted small mb-1"><i class="fas fa-phone"></i> +27 32 436 6000</p>
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-shuttle-van"></i> Ground transport: Bus, taxi, car hire on site
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3 hub-card" data-mode="flight" data-district="richardsbay">
+                <div class="card shadow-sm h-100" style="border-left: 4px solid #cc0000;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-plane-departure" style="color:#cc0000;"></i> Richards Bay Airport</h6>
+                            <span class="badge badge-danger">Flight</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> Richards Bay, King Cetshwayo District</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> 06:00 – 20:00 | IATA: <strong>RCB</strong></p>
+                        <p class="text-muted small mb-1"><i class="fas fa-phone"></i> +27 35 786 0012</p>
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-info-circle"></i> Domestic flights to Johannesburg, Cape Town
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3 hub-card" data-mode="flight" data-district="durban">
+                <div class="card shadow-sm h-100" style="border-left: 4px solid #cc0000;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-bold"><i class="fas fa-plane" style="color:#cc0000;"></i> Virginia Airport (General Aviation)</h6>
+                            <span class="badge badge-danger">Flight</span>
+                        </div>
+                        <p class="text-muted small mb-1"><i class="fas fa-map-pin"></i> Virginia, Durban North</p>
+                        <p class="text-muted small mb-1"><i class="fas fa-clock"></i> 07:00 – 18:00 | IATA: <strong>VIR</strong></p>
+                        <p class="text-muted small mb-1"><i class="fas fa-phone"></i> +27 31 563 3500</p>
+                        <p class="text-muted small mb-0">
+                            <i class="fas fa-info-circle"></i> Charter, flight training &amp; light aircraft
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end #hubCards -->
+
+        <div id="noHubResults" class="alert alert-warning d-none">
+            <i class="fas fa-exclamation-circle"></i> No hubs found for the selected filter. Try changing the mode or district.
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-md-6">
-        <h4><i class="fas fa-map-signs"></i> Route Optimization</h4>
-        <p>Optimize routes based on real-time traffic information to ensure timely arrivals.</p>
+
+    <!-- ============================================================
+         TAB 3 – PLAN YOUR JOURNEY
+         ============================================================ -->
+    <div class="tab-pane fade" id="journey" role="tabpanel">
+        <h4 class="mb-1"><i class="fas fa-route" style="color:#003399;"></i> Plan Your Journey</h4>
+        <p class="text-muted mb-3">Get a multi-modal journey plan including bus, taxi, rail and flight connections.</p>
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="col-md-5 mb-2">
+                        <label for="journeyFrom"><strong><i class="fas fa-circle" style="color:#339933;"></i> From</strong></label>
+                        <input type="text" class="form-control" id="journeyFrom" placeholder="e.g. Durban CBD, King Shaka Airport">
+                    </div>
+                    <div class="col-md-5 mb-2">
+                        <label for="journeyTo"><strong><i class="fas fa-map-marker-alt" style="color:#cc0000;"></i> To</strong></label>
+                        <input type="text" class="form-control" id="journeyTo" placeholder="e.g. Richards Bay, Johannesburg O.R. Tambo">
+                    </div>
+                    <div class="col-md-2 mb-2 d-flex align-items-end">
+                        <button class="btn btn-block font-weight-bold text-white" style="background-color:#003399;" onclick="swapJourney()">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-3 mb-2">
+                        <label for="journeyDate"><strong>Date</strong></label>
+                        <input type="date" class="form-control" id="journeyDate">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="journeyTime"><strong>Departure Time</strong></label>
+                        <input type="time" class="form-control" id="journeyTime">
+                    </div>
+                    <div class="col-md-3 mb-2">
+                        <label for="journeyMode"><strong>Preferred Mode</strong></label>
+                        <select class="form-control" id="journeyMode">
+                            <option value="any">Any Mode</option>
+                            <option value="bus">Bus</option>
+                            <option value="taxi">Minibus Taxi</option>
+                            <option value="rail">Rail (Metrorail)</option>
+                            <option value="flight">Flight</option>
+                            <option value="mixed">Mixed / Connecting</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3 mb-2 d-flex align-items-end">
+                        <button class="btn btn-block btn-lg font-weight-bold text-white" style="background-color:#003399;" onclick="planJourney()">
+                            <i class="fas fa-search"></i> Find Routes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Journey Results -->
+        <div id="journeyResults" class="d-none">
+            <h5 class="mb-3"><i class="fas fa-list"></i> Available Routes</h5>
+            <div id="journeyCards"></div>
+        </div>
+
+        <div id="journeyPlaceholder" class="text-center py-5 text-muted">
+            <i class="fas fa-route fa-3x mb-3" style="opacity:0.25;"></i>
+            <p>Enter your origin, destination and travel date above, then click <strong>Find Routes</strong>.</p>
+        </div>
     </div>
-    <div class="col-md-6">
-        <h4><i class="fas fa-info-circle"></i> Service Information</h4>
-        <p>Get updates on any changes or disruptions to public transport services.</p>
+
+    <!-- ============================================================
+         TAB 4 – OPERATING LICENSES
+         ============================================================ -->
+    <div class="tab-pane fade" id="license" role="tabpanel">
+        <h4 class="mb-1"><i class="fas fa-id-card" style="color:#003399;"></i> Public Transport Operating Licenses</h4>
+        <p class="text-muted mb-4">Apply for, renew, or check the status of a public transport operating license in KwaZulu-Natal.</p>
+
+        <ul class="nav nav-pills mb-4" id="licenseTabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="apply-tab" data-toggle="tab" href="#licenseApply" role="tab">
+                    <i class="fas fa-file-alt"></i> Apply / Renew
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="status-tab" data-toggle="tab" href="#licenseStatus" role="tab">
+                    <i class="fas fa-search"></i> Check Status
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="info-tab" data-toggle="tab" href="#licenseInfo" role="tab">
+                    <i class="fas fa-book"></i> Requirements &amp; Fees
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="licenseTabsContent">
+
+            <!-- Apply / Renew -->
+            <div class="tab-pane fade show active" id="licenseApply" role="tabpanel">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="mb-3" style="color:#003399;">Operating License Application Form</h5>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label><strong>Applicant Full Name</strong></label>
+                                <input type="text" class="form-control" id="lic-name" placeholder="Full name as per ID">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label><strong>SA ID / Company Reg Number</strong></label>
+                                <input type="text" class="form-control" id="lic-id" placeholder="ID or company registration number">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label><strong>Contact Number</strong></label>
+                                <input type="tel" class="form-control" id="lic-phone" placeholder="+27 XX XXX XXXX">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label><strong>Email Address</strong></label>
+                                <input type="email" class="form-control" id="lic-email" placeholder="your@email.com">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-4 mb-3">
+                                <label><strong>Vehicle Type</strong></label>
+                                <select class="form-control" id="lic-vehicle">
+                                    <option value="">-- Select --</option>
+                                    <option>Minibus Taxi (up to 15 seats)</option>
+                                    <option>Midibus (16–35 seats)</option>
+                                    <option>Full-size Bus (35+ seats)</option>
+                                    <option>Charter Bus</option>
+                                    <option>School Transport</option>
+                                    <option>Metered Taxi / E-hailing</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label><strong>Vehicle Registration Number</strong></label>
+                                <input type="text" class="form-control" id="lic-reg" placeholder="e.g. KZN 123 456">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label><strong>Application Type</strong></label>
+                                <select class="form-control" id="lic-type">
+                                    <option value="">-- Select --</option>
+                                    <option>New Application</option>
+                                    <option>Renewal</option>
+                                    <option>Amendment (route change)</option>
+                                    <option>Duplicate (lost/damaged)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label><strong>Proposed Route / Operating Area</strong></label>
+                                <input type="text" class="form-control" id="lic-route" placeholder="e.g. Durban CBD to Umlazi via South Beach">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label><strong>Operating District</strong></label>
+                                <select class="form-control" id="lic-district">
+                                    <option value="">-- Select --</option>
+                                    <option>eThekwini (Durban)</option>
+                                    <option>uMgungundlovu (PMB)</option>
+                                    <option>King Cetshwayo (Richards Bay)</option>
+                                    <option>uThukela (Ladysmith)</option>
+                                    <option>Amajuba (Newcastle)</option>
+                                    <option>iLembe</option>
+                                    <option>Harry Gwala</option>
+                                    <option>uMkhanyakude</option>
+                                    <option>Zululand</option>
+                                    <option>uMzinyathi</option>
+                                    <option>uMkhambathini</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label><strong>Additional Notes / Supporting Information</strong></label>
+                            <textarea class="form-control" id="lic-notes" rows="3" placeholder="Any additional information relevant to your application..."></textarea>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="lic-declare">
+                            <label class="form-check-label" for="lic-declare">
+                                I declare that all information provided is true and correct, and I understand that false information may result in rejection or cancellation of the license.
+                            </label>
+                        </div>
+                        <div id="lic-success" class="alert alert-success d-none">
+                            <i class="fas fa-check-circle"></i> Your application has been submitted successfully! Reference number: <strong id="lic-ref"></strong>. You will receive a confirmation email within 3 working days.
+                        </div>
+                        <div id="lic-error" class="alert alert-danger d-none">
+                            <i class="fas fa-exclamation-circle"></i> Please fill in all required fields and accept the declaration before submitting.
+                        </div>
+                        <button type="button" class="btn btn-lg font-weight-bold text-white px-5" style="background-color:#003399;" onclick="submitLicenseApp()">
+                            <i class="fas fa-paper-plane"></i> Submit Application
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Check Status -->
+            <div class="tab-pane fade" id="licenseStatus" role="tabpanel">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h5 class="mb-3" style="color:#003399;">Check Application Status</h5>
+                        <div class="form-row">
+                            <div class="col-md-6 mb-3">
+                                <label><strong>Reference Number</strong></label>
+                                <input type="text" class="form-control" id="status-ref" placeholder="e.g. KZN-OL-20240001">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label><strong>ID Number</strong></label>
+                                <input type="text" class="form-control" id="status-id" placeholder="SA ID Number">
+                            </div>
+                            <div class="col-md-2 mb-3 d-flex align-items-end">
+                                <button class="btn btn-block font-weight-bold text-white" style="background-color:#003399;" onclick="checkStatus()">
+                                    <i class="fas fa-search"></i> Check
+                                </button>
+                            </div>
+                        </div>
+                        <div id="status-result" class="d-none">
+                            <hr>
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <table class="table table-borderless table-sm mb-0">
+                                        <tr><td class="font-weight-bold" style="width:200px;">Reference:</td><td id="sr-ref">—</td></tr>
+                                        <tr><td class="font-weight-bold">Applicant:</td><td id="sr-name">—</td></tr>
+                                        <tr><td class="font-weight-bold">Vehicle Type:</td><td id="sr-vehicle">—</td></tr>
+                                        <tr><td class="font-weight-bold">Route:</td><td id="sr-route">—</td></tr>
+                                        <tr><td class="font-weight-bold">Submitted:</td><td id="sr-date">—</td></tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <div id="sr-badge" class="badge p-3" style="font-size:1rem;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="status-not-found" class="alert alert-warning d-none">
+                            <i class="fas fa-exclamation-circle"></i> No application found for the provided reference number and ID. Please verify and try again.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Requirements & Fees -->
+            <div class="tab-pane fade" id="licenseInfo" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-header font-weight-bold" style="background-color:#003399; color:#FFCC00;">
+                                <i class="fas fa-clipboard-list"></i> Required Documents
+                            </div>
+                            <div class="card-body">
+                                <ul class="mb-0">
+                                    <li>Certified copy of SA ID / Passport</li>
+                                    <li>Valid driver's license (PDP)</li>
+                                    <li>Vehicle registration certificate (NATIS)</li>
+                                    <li>Roadworthy certificate (not older than 6 months)</li>
+                                    <li>Proof of vehicle ownership / lease agreement</li>
+                                    <li>Completed OL application form (KZN-DOT-OL1)</li>
+                                    <li>Proof of payment of application fee</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-header font-weight-bold" style="background-color:#003399; color:#FFCC00;">
+                                <i class="fas fa-coins"></i> Application Fees (2024)
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-sm table-striped mb-0">
+                                    <thead style="background:#f1f4ff;">
+                                        <tr><th>License Type</th><th class="text-right">Fee (ZAR)</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>New Application</td><td class="text-right">R 350</td></tr>
+                                        <tr><td>Renewal</td><td class="text-right">R 250</td></tr>
+                                        <tr><td>Amendment</td><td class="text-right">R 150</td></tr>
+                                        <tr><td>Duplicate</td><td class="text-right">R 100</td></tr>
+                                        <tr><td>Late renewal (per month)</td><td class="text-right">R 75</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 mb-3">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header font-weight-bold" style="background-color:#003399; color:#FFCC00;">
+                                <i class="fas fa-gavel"></i> Legal Framework
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-2">Public transport operating licenses in KZN are governed by:</p>
+                                <ul class="mb-0">
+                                    <li><strong>National Land Transport Act (NLTA), No. 5 of 2009</strong> – governs operating licenses for land transport.</li>
+                                    <li><strong>KwaZulu-Natal Transport Authority (KZNTA)</strong> – responsible for issuing and regulating operating licenses.</li>
+                                    <li><strong>Road Traffic Act, No. 93 of 1996</strong> – roadworthiness and vehicle fitness standards.</li>
+                                </ul>
+                                <hr>
+                                <p class="mb-0 small text-muted">
+                                    <i class="fas fa-building"></i>
+                                    For in-person applications, visit your nearest <strong>KZN DOT Regional Office</strong> or
+                                    <strong>Transport Authority offices</strong> in your district.
+                                    Enquiries: <strong>0800 203 803</strong> (toll-free) | <strong>info@kzntransport.gov.za</strong>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- end licenseTabsContent -->
     </div>
-</div>
+
+</div><!-- end transportTabsContent -->
+
+
+<script>
+    // ---- Transport Hub Locator ----
+    function filterHubs() {
+        const mode = document.getElementById('hubMode').value;
+        const district = document.getElementById('hubDistrict').value;
+        const cards = document.querySelectorAll('.hub-card');
+        let visible = 0;
+        cards.forEach(function(card) {
+            const modeMatch = (mode === 'all' || card.dataset.mode === mode);
+            const districtMatch = (district === 'all' || card.dataset.district === district);
+            if (modeMatch && districtMatch) {
+                card.style.display = '';
+                visible++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+        document.getElementById('noHubResults').classList.toggle('d-none', visible > 0);
+    }
+
+    function useMyLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                alert('Location detected: Lat ' + pos.coords.latitude.toFixed(4) + ', Lon ' + pos.coords.longitude.toFixed(4) + '\nShowing nearest hubs on map.');
+            }, function() {
+                alert('Unable to retrieve your location. Please enter your district manually.');
+            });
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }
+    }
+
+    // ---- Plan Your Journey ----
+    var journeyRoutes = [
+        {
+            from: ['durban', 'cbd', 'warwick', 'beachfront'],
+            to: ['king shaka', 'airport', 'la mercy'],
+            mode: 'bus',
+            options: [
+                { label: 'Airport Shuttle Bus', icon: 'fas fa-bus', color: '#003399', badge: 'Bus', depart: '06:00', arrive: '07:05', duration: '65 min', fare: 'R 85', changes: '0 changes' },
+                { label: 'Rideshare + Taxi', icon: 'fas fa-taxi', color: '#FFCC00', badge: 'Taxi', depart: '05:45', arrive: '07:10', duration: '85 min', fare: 'R 140', changes: '1 change' }
+            ]
+        },
+        {
+            from: ['durban', 'cbd', 'warwick'],
+            to: ['umlazi', 'south'],
+            mode: 'rail',
+            options: [
+                { label: 'Metrorail – Umlazi Line', icon: 'fas fa-train', color: '#339933', badge: 'Rail', depart: '07:15', arrive: '07:58', duration: '43 min', fare: 'R 12', changes: '0 changes' },
+                { label: 'BRT Bus', icon: 'fas fa-bus', color: '#003399', badge: 'Bus', depart: '07:00', arrive: '08:10', duration: '70 min', fare: 'R 22', changes: '0 changes' }
+            ]
+        },
+        {
+            from: ['king shaka', 'durban airport', 'la mercy'],
+            to: ['johannesburg', 'joburg', 'jnb', 'or tambo', 'or tambo', 'jhb'],
+            mode: 'flight',
+            options: [
+                { label: 'FlySafair DUR–JNB', icon: 'fas fa-plane', color: '#cc0000', badge: 'Flight', depart: '08:00', arrive: '09:05', duration: '1h 05min', fare: 'From R 699', changes: 'Direct' },
+                { label: 'Airlink DUR–JNB', icon: 'fas fa-plane', color: '#cc0000', badge: 'Flight', depart: '10:30', arrive: '11:35', duration: '1h 05min', fare: 'From R 850', changes: 'Direct' },
+                { label: 'kulula.com DUR–JNB', icon: 'fas fa-plane', color: '#cc0000', badge: 'Flight', depart: '14:15', arrive: '15:20', duration: '1h 05min', fare: 'From R 780', changes: 'Direct' }
+            ]
+        },
+        {
+            from: ['king shaka', 'durban airport', 'la mercy', 'durban'],
+            to: ['cape town', 'cpt'],
+            mode: 'flight',
+            options: [
+                { label: 'FlySafair DUR–CPT', icon: 'fas fa-plane', color: '#cc0000', badge: 'Flight', depart: '07:00', arrive: '09:05', duration: '2h 05min', fare: 'From R 799', changes: 'Direct' },
+                { label: 'Airlink DUR–CPT', icon: 'fas fa-plane', color: '#cc0000', badge: 'Flight', depart: '13:30', arrive: '15:40', duration: '2h 10min', fare: 'From R 950', changes: 'Direct' }
+            ]
+        },
+        {
+            from: ['pmb', 'pietermaritzburg', 'maritzburg'],
+            to: ['durban', 'cbd'],
+            mode: 'bus',
+            options: [
+                { label: 'Greyhound PMB–Durban', icon: 'fas fa-bus', color: '#003399', badge: 'Bus', depart: '06:30', arrive: '07:55', duration: '85 min', fare: 'R 95', changes: '0 changes' },
+                { label: 'Intercape PMB–Durban', icon: 'fas fa-bus', color: '#003399', badge: 'Bus', depart: '08:00', arrive: '09:30', duration: '90 min', fare: 'R 80', changes: '0 changes' }
+            ]
+        }
+    ];
+
+    function planJourney() {
+        const from = document.getElementById('journeyFrom').value.trim().toLowerCase();
+        const to = document.getElementById('journeyTo').value.trim().toLowerCase();
+        const mode = document.getElementById('journeyMode').value;
+        const date = document.getElementById('journeyDate').value;
+        const time = document.getElementById('journeyTime').value;
+
+        document.getElementById('journeyPlaceholder').classList.add('d-none');
+        const resultsDiv = document.getElementById('journeyResults');
+        const cardsDiv = document.getElementById('journeyCards');
+
+        if (!from || !to) {
+            alert('Please enter both an origin and a destination.');
+            return;
+        }
+
+        // Find matching route
+        let matched = null;
+        for (var i = 0; i < journeyRoutes.length; i++) {
+            var r = journeyRoutes[i];
+            var fromMatch = r.from.some(function(f) { return from.includes(f) || f.includes(from.split(' ')[0]); });
+            var toMatch = r.to.some(function(t) { return to.includes(t) || t.includes(to.split(' ')[0]); });
+            if (fromMatch && toMatch) { matched = r; break; }
+        }
+
+        // Generic fallback
+        if (!matched) {
+            matched = {
+                options: [
+                    { label: 'Minibus Taxi (Recommended)', icon: 'fas fa-taxi', color: '#FFCC00', badge: 'Taxi', depart: time || '06:00', arrive: '—', duration: 'Varies', fare: 'R 20 – R 80', changes: '1–2 changes' },
+                    { label: 'Intercity Bus', icon: 'fas fa-bus', color: '#003399', badge: 'Bus', depart: time || '07:00', arrive: '—', duration: 'Varies', fare: 'R 80 – R 250', changes: '0–1 changes' }
+                ]
+            };
+        }
+
+        var filteredOptions = matched.options;
+        if (mode !== 'any' && mode !== 'mixed') {
+            filteredOptions = matched.options.filter(function(o) { return o.badge.toLowerCase() === mode || (mode === 'flight' && o.badge === 'Flight'); });
+            if (filteredOptions.length === 0) filteredOptions = matched.options;
+        }
+
+        cardsDiv.innerHTML = '';
+        filteredOptions.forEach(function(opt) {
+            var badgeClass = opt.badge === 'Flight' ? 'danger' : opt.badge === 'Taxi' ? 'warning text-dark' : opt.badge === 'Rail' ? 'success' : 'primary';
+            cardsDiv.innerHTML += '<div class="card mb-3 shadow-sm border-0">' +
+                '<div class="card-body">' +
+                    '<div class="d-flex justify-content-between align-items-start">' +
+                        '<h6 class="font-weight-bold mb-1"><i class="' + opt.icon + '" style="color:' + opt.color + ';"></i> ' + opt.label + '</h6>' +
+                        '<span class="badge badge-' + badgeClass + '">' + opt.badge + '</span>' +
+                    '</div>' +
+                    '<div class="row mt-2">' +
+                        '<div class="col-6 col-md-3"><small class="text-muted">Departs</small><br><strong>' + opt.depart + '</strong></div>' +
+                        '<div class="col-6 col-md-3"><small class="text-muted">Arrives</small><br><strong>' + opt.arrive + '</strong></div>' +
+                        '<div class="col-6 col-md-3 mt-2 mt-md-0"><small class="text-muted">Duration</small><br><strong>' + opt.duration + '</strong></div>' +
+                        '<div class="col-6 col-md-3 mt-2 mt-md-0"><small class="text-muted">Fare (est.)</small><br><strong class="text-success">' + opt.fare + '</strong></div>' +
+                    '</div>' +
+                    '<p class="mb-0 mt-2"><small class="text-muted"><i class="fas fa-exchange-alt"></i> ' + opt.changes + (date ? ' &nbsp; | &nbsp; <i class="fas fa-calendar-alt"></i> ' + date : '') + '</small></p>' +
+                '</div>' +
+            '</div>';
+        });
+
+        resultsDiv.classList.remove('d-none');
+    }
+
+    function swapJourney() {
+        var from = document.getElementById('journeyFrom');
+        var to = document.getElementById('journeyTo');
+        var tmp = from.value;
+        from.value = to.value;
+        to.value = tmp;
+    }
+
+    // ---- Operating License submission ----
+    function submitLicenseApp() {
+        var name = document.getElementById('lic-name').value.trim();
+        var id = document.getElementById('lic-id').value.trim();
+        var phone = document.getElementById('lic-phone').value.trim();
+        var email = document.getElementById('lic-email').value.trim();
+        var vehicle = document.getElementById('lic-vehicle').value;
+        var reg = document.getElementById('lic-reg').value.trim();
+        var type = document.getElementById('lic-type').value;
+        var district = document.getElementById('lic-district').value;
+        var declare = document.getElementById('lic-declare').checked;
+        var err = document.getElementById('lic-error');
+        var succ = document.getElementById('lic-success');
+
+        if (!name || !id || !phone || !email || !vehicle || !reg || !type || !district || !declare) {
+            err.classList.remove('d-none');
+            succ.classList.add('d-none');
+            return;
+        }
+
+        err.classList.add('d-none');
+        var ref = 'KZN-OL-' + new Date().getFullYear() + '-' + Math.floor(10000 + Math.random() * 90000);
+        document.getElementById('lic-ref').textContent = ref;
+        succ.classList.remove('d-none');
+        window.scrollTo({ top: succ.offsetTop - 80, behavior: 'smooth' });
+    }
+
+    // ---- License Status Check ----
+    var demoStatuses = [
+        { ref: 'KZN-OL-2024-00001', id: '8001015009087', name: 'Sipho Dlamini', vehicle: 'Minibus Taxi', route: 'Durban CBD – Kwa-Mashu', date: '2024-01-15', status: 'Approved', badgeClass: 'badge-success' },
+        { ref: 'KZN-OL-2024-00002', id: '7503125009082', name: 'Nomsa Khumalo', vehicle: 'Full-size Bus', route: 'PMB – Durban via N3', date: '2024-02-20', status: 'Pending Review', badgeClass: 'badge-warning text-dark' },
+        { ref: 'KZN-OL-2024-00003', id: '9212195009081', name: 'Thabo Nkosi', vehicle: 'Metered Taxi', route: 'eThekwini District', date: '2024-03-05', status: 'Under Inspection', badgeClass: 'badge-info' }
+    ];
+
+    function checkStatus() {
+        var refInput = document.getElementById('status-ref').value.trim();
+        var idInput = document.getElementById('status-id').value.trim();
+        var resultDiv = document.getElementById('status-result');
+        var notFound = document.getElementById('status-not-found');
+
+        if (!refInput || !idInput) { alert('Please enter both reference number and ID number.'); return; }
+
+        var match = demoStatuses.find(function(s) { return s.ref === refInput && s.id === idInput; });
+
+        if (match) {
+            document.getElementById('sr-ref').textContent = match.ref;
+            document.getElementById('sr-name').textContent = match.name;
+            document.getElementById('sr-vehicle').textContent = match.vehicle;
+            document.getElementById('sr-route').textContent = match.route;
+            document.getElementById('sr-date').textContent = match.date;
+            var badge = document.getElementById('sr-badge');
+            badge.className = 'badge p-3';
+            badge.classList.add(...match.badgeClass.split(' '));
+            badge.style.fontSize = '1rem';
+            badge.textContent = match.status;
+            resultDiv.classList.remove('d-none');
+            notFound.classList.add('d-none');
+        } else {
+            resultDiv.classList.add('d-none');
+            notFound.classList.remove('d-none');
+        }
+    }
+</script>
 {% endblock %}

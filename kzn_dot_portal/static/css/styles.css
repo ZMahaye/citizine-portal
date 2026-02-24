@@ -1,33 +1,74 @@
 /* styles.css */
 
+/* ---- Base ---- */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f8f9fa;
+    background-color: #f4f6fb;
 }
 
 h2 {
     color: #003399; /* KZN DOT Blue */
 }
 
+/* ---- Navbar ---- */
 .navbar {
-    background-color: #003399; /* KZN DOT Blue */
+    background-color: #003399 !important;
 }
 
-.navbar-brand, .nav-link {
-    color: #FFCC00 !important; /* KZN DOT Yellow */
+.navbar .nav-link {
+    color: #FFCC00 !important;
 }
 
-.navbar-brand:hover, .nav-link:hover {
-    color: #339933 !important; /* KZN DOT Green */
+.navbar .nav-link:hover {
+    color: #ffffff !important;
 }
 
+/* ---- Content headings ---- */
 .container h4 {
-    color: #003399; /* KZN DOT Blue */
+    color: #003399;
 }
 
+/* ---- Tab nav ---- */
+.nav-tabs .nav-link.active {
+    color: #003399 !important;
+    font-weight: 600;
+    border-bottom: 3px solid #003399;
+}
+
+.nav-tabs .nav-link {
+    color: #555;
+}
+
+/* ---- Cards ---- */
+.card {
+    border-radius: 8px;
+}
+
+/* ---- Auth card ---- */
+.auth-wrapper {
+    min-height: 70vh;
+}
+
+.auth-card {
+    border-radius: 10px;
+    border: none;
+}
+
+/* ---- Badges ---- */
+.badge {
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+/* ---- Journey results ---- */
+#journeyCards .card {
+    border-radius: 8px;
+}
+
+/* ---- Footer ---- */
 footer {
-    background-color: #003399; /* KZN DOT Blue */
-    color: #FFCC00; /* KZN DOT Yellow */
+    background-color: #003399;
+    color: #FFCC00;
 }
 
 .footer img {
