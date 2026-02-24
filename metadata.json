@@ -1,0 +1,10 @@
+
+{
+  "name": "KZN DOT Citizen Portal",
+  "description": "A centralized digital gateway for KwaZulu-Natal citizens to access transport services, report road issues, and receive real-time updates.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}
